@@ -1,15 +1,29 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import connectDB from "./lib/db.js";
+import dotenv from "dotenv";
+import authrouter from "./router/authroute.js";
+
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Hello from App");
-});
+app.use("/api/v1/auth", authrouter);
 
-app.listen(5000, () => {
-  console.log("App is running on port 5000");
-});
+const PORT = process.env.PORT || 5000;
+
+const stratServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  } catch (error) {
+    console.error("Failed to start the server:", error.message);
+  }
+};
+
+stratServer();
