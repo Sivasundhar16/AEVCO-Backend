@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     courses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course", // Referencing the Course model
+        ref: "Course",
       },
     ],
   },

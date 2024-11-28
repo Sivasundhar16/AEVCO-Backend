@@ -51,3 +51,59 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User Not exist.Creat new Account",
+      });
+    }
+
+    //checking the password
+    const ismatch = await bcrypt.compare(password, user.password);
+    if (!ismatch) {
+      return res.status(400).json({
+        message: "Invalid Password",
+      });
+    }
+
+    //creat a jwt token
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "5d",
+    });
+
+    await res.cookie("jwt-aevco", token, {
+      httpOnly: true,
+      maxAge: 5 * 24 * 60 * 1000,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(200).json({
+      message: "Logged in Successfully",
+    });
+  } catch (error) {
+    console.log("Error occured", error.message);
+    res.status(500).json({ message: "server error" });
+  }
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("jwt-aevco");
+  res.json({ message: "Logged out Successfully" });
+};
+
+export const getcurrentUser = async (req, res) => {
+  try {
+    res.send(req.user);
+  } catch (error) {
+    console.log("error occured", error.message);
+    res.status(500).json({ message: "server error" });
+  }
+};
