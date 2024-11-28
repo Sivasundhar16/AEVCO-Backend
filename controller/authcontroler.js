@@ -101,7 +101,7 @@ export const logout = (req, res) => {
 
 export const getcurrentUser = async (req, res) => {
   try {
-    res.send(req.user);
+    res.json(req.user);
   } catch (error) {
     console.log("error occured", error.message);
     res.status(500).json({ message: "server error" });
