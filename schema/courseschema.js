@@ -2,66 +2,122 @@ import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema(
   {
-    courseName: {
+    title: {
       type: String,
       required: true,
       trim: true,
     },
-    courseTutor: {
+    description: {
       type: String,
       required: true,
-      trim: true,
     },
-    Subject: {
+    category: {
       type: String,
-      enum: ["CSE/IT", "ECE/EEE", "Mechanical", "Management", "Civil"],
-    },
-    Catagory: {
-      type: String,
+      required: true,
       enum: [
-        "Design",
         "Development",
         "Business",
+        "Finance & Accounting",
+        "IT & Software",
+        "Office Productivity",
+        "Personal Development",
+        "Design",
         "Marketing",
-        "Photography",
-        "Acting",
+        "Health & Fitness",
+        "Music",
       ],
     },
-
-    Language: {
-      type: String,
-    },
-    Learningtype: {
-      type: String,
-    },
-    courseRating: {
-      type: Number,
-      min: 1,
-      max: 5,
-    },
-
-    Description: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    Duration: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    Image: {
-      type: String,
-      required: true,
-    },
-    courseOverview: {
-      type: String,
-      required: true,
-    },
-    coursePrice: {
+    price: {
       type: Number,
       required: true,
+      min: 0,
+    },
+    instructor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    thumbnail: {
+      type: String,
+      required: true,
+    },
+    videoUrls: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+        duration: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    requirements: [
+      {
+        type: String,
+      },
+    ],
+    whatYouWillLearn: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    reviews: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        rating: {
+          type: Number,
+          min: 1,
+          max: 5,
+        },
+        comment: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    rating: {
+      type: Number,
+      default: 0, // Average rating
+    },
+    enrolledStudents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    language: {
+      type: String,
+      default: "English",
+    },
+    level: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advanced"],
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    isPublished: {
+      type: Boolean,
+      default: false,
     },
   },
   {

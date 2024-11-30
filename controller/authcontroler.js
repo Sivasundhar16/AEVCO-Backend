@@ -6,7 +6,7 @@ dotenv.config();
 
 export const signup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "Enter All the filed" });
     }
@@ -28,15 +28,20 @@ export const signup = async (req, res) => {
     const user = new User({
       email: email,
       password: hashPassword,
+      role: role,
     });
 
     await user.save();
 
     //started jwt part
 
-    const token = jwt.sign({ userid: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "5d",
-    });
+    const token = jwt.sign(
+      { userid: user._id, role: user.role },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "5d",
+      }
+    );
 
     res.cookie("jwt-aevco", token, {
       httpOnly: true,
@@ -74,9 +79,16 @@ export const login = async (req, res) => {
 
     //creat a jwt token
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "5d",
-    });
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "5d",
+      }
+    );
 
     await res.cookie("jwt-aevco", token, {
       httpOnly: true,
