@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authrouter);
-app.use("/api/v1/course", courseroute);
+app.use("/api/v1/courses", courseroute);
 
 const PORT = process.env.PORT || 5000;
 

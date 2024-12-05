@@ -33,6 +33,8 @@ export const signup = async (req, res) => {
 
     await user.save();
 
+    // const user = await User.create({})  another method for creating
+
     //started jwt part
 
     const token = jwt.sign(
@@ -52,8 +54,7 @@ export const signup = async (req, res) => {
 
     res.status(201).json({ message: "User Created Successfully" });
   } catch (error) {
-    console.log("Error in Login", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: error });
   }
 };
 

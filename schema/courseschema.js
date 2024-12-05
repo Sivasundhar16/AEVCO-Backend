@@ -35,25 +35,20 @@ const courseSchema = new mongoose.Schema(
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     thumbnail: {
       type: String,
-      required: true,
     },
     videoUrls: [
       {
         title: {
           type: String,
-          required: true,
         },
         url: {
           type: String,
-          required: true,
         },
         duration: {
           type: Number,
-          required: true,
         },
       },
     ],
@@ -65,7 +60,6 @@ const courseSchema = new mongoose.Schema(
     whatYouWillLearn: [
       {
         type: String,
-        required: true,
       },
     ],
     reviews: [
@@ -90,7 +84,7 @@ const courseSchema = new mongoose.Schema(
     ],
     rating: {
       type: Number,
-      default: 0, // Average rating
+      default: 0,
     },
     enrolledStudents: [
       {
@@ -105,7 +99,6 @@ const courseSchema = new mongoose.Schema(
     level: {
       type: String,
       enum: ["Beginner", "Intermediate", "Advanced"],
-      required: true,
     },
     createdAt: {
       type: Date,

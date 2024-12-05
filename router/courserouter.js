@@ -3,13 +3,19 @@ import {
   addCourse,
   updateCourse,
   deleteCourse,
+  getAllCourse,
+  getCourse,
 } from "../controller/coursecontroller.js";
 import { protectRoute } from "../middleware/authmiddleware.js";
+import { roleAuth } from "../middleware/role.auth.js";
 
 const router = express.Router();
 
-router.post("/add", protectRoute, addCourse);
-router.put("/update", protectRoute, updateCourse);
-router.delete("/delete", protectRoute, deleteCourse);
+router.get("/allcourses", getAllCourse);
+router.get("/course/:id", getCourse);
+
+router.post("/add", protectRoute, roleAuth("admin"), addCourse);
+router.put("/update/:id", protectRoute, roleAuth("admin"), updateCourse);
+router.delete("/delete/:id", protectRoute, roleAuth("admin"), deleteCourse);
 
 export default router;
