@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { createHash, randomBytes } from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,6 +18,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -32,6 +35,17 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = randomBytes(32).toString("hex");
+  this.passwordResetToken = createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  console.log(resetToken, this.passwordResetToken);
+  return resetToken; // this is going to send to email
+};
 
 const User = mongoose.model("User", userSchema);
 

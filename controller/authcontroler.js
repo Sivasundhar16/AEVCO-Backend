@@ -120,3 +120,30 @@ export const getcurrentUser = async (req, res) => {
     res.status(500).json({ message: "server error" });
   }
 };
+
+export const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Provide a valid email" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Enter a valid Email Id" });
+    }
+
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+  } catch (error) {
+    res.send(400).json({ message: error });
+  }
+};
+export const resetPassword = async (req, res) => {
+  try {
+  } catch (error) {
+    res.send(400).json({ message: error });
+  }
+};

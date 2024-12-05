@@ -1,9 +1,6 @@
 export const roleAuth = (...allowedRoles) => {
   return (req, res, next) => {
     try {
-      // Log req.user to inspect the structure
-      console.log(req.user);
-
       // Check if req.user is populated and role is available
       if (!req.user || !req.user.role) {
         return res.status(401).json({ message: "User is not authenticated" });
