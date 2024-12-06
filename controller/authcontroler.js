@@ -1,6 +1,7 @@
 import User from "../schema/userschema.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import sendEmail from "../email/email.js";
 import jwt from "jsonwebtoken";
 dotenv.config();
 
@@ -122,14 +123,18 @@ export const getcurrentUser = async (req, res) => {
 };
 
 export const forgetPassword = async (req, res) => {
+  console.log("test3");
+
   try {
     const { email } = req.body;
+    console.log("test2");
 
     if (!email) {
       return res.status(400).json({ message: "Provide a valid email" });
     }
 
     const user = await User.findOne({ email });
+    console.log("test1");
 
     if (!user) {
       return res.status(404).json({ message: "Enter a valid Email Id" });
@@ -137,10 +142,26 @@ export const forgetPassword = async (req, res) => {
 
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
+
+    console.log("test");
+    const resetURL = `${req.protocol || "http"}://${req.get(
+      "host"
+    )}/api/v1/auth/resetpassword/${resetToken}`;
+
+    const message = `Forgot your password? Reset it using this link: ${resetURL}\nIf you didn't forget your password, please ignore this email.`;
+
+    await sendEmail({
+      email: user.email,
+      subject: "Your password reset token (valid for 10 minutes)",
+      message: message,
+    });
+
+    res.status(200).json({ message: "Token sent to email" });
   } catch (error) {
-    res.send(400).json({ message: error });
+    res.status(400).json({ message: error.message });
   }
 };
+
 export const resetPassword = async (req, res) => {
   try {
   } catch (error) {
